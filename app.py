@@ -3,22 +3,16 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
-import tflite_runtime.interpreter as tflite
+import tensorflow as tf  # Ganti baris ini
 
-# Inisialisasi Flask
 app = Flask(__name__)
 CORS(app)
 
-# Load TFLite Model (Gunakan file hasil download dari Colab)
-model_path = "model_quantized.tflite"
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Model file not found at {model_path}")
-
-# Inisialisasi Interpreter TFLite
-interpreter = tflite.Interpreter(model_path=model_path)
+# Load TFLite Model menggunakan TensorFlow lite interpreter
+# Cara ini lebih kompatibel di berbagai server Linux
+interpreter = tf.lite.Interpreter(model_path="model_quantized.tflite")
 interpreter.allocate_tensors()
 
-# Mendapatkan detail input dan output model
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
@@ -64,4 +58,5 @@ def predict():
 # Jalankan aplikasi (Render akan mengatur port secara otomatis via environment variable)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
+
     app.run(host='0.0.0.0', port=port)
