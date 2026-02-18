@@ -1,6 +1,6 @@
 flask
 flask-cors
-tflite-runtime
+tensorflow-cpu==2.15.0
 numpy
 Pillow
 gunicorn
